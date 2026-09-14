@@ -102,7 +102,7 @@ const PACKAGES = [
   },
   {
     id: 'cli',
-    name: 'nest-auth-kit',
+    name: '@angelitosystems/nest-auth-kit',
     dir: 'packages/cli',
     description: 'Official CLI Toolkit & Scaffolding Engine',
     dependsOn: [],
@@ -234,26 +234,17 @@ async function publishSinglePackage(pkg, options, npmUser) {
 
   while (!published && attempts < maxAttempts) {
     attempts++;
-    const publishArgs = ['publish', '--access', 'public', `--tag`, options.tag || 'latest'];
-    if (currentOtp) {
-      publishArgs.push(`--otp=${currentOtp}`);
-    }
+    const publishCmd = `npm publish --access public --tag ${options.tag || 'latest'}${currentOtp ? ` --otp=${currentOtp}` : ''}`;
+    log(`\n${colors.cyan}▶ Ejecutando: ${publishCmd} (en ${pkg.dir})...${colors.reset}`);
 
-    log(`\n${colors.cyan}▶ Ejecutando: npm ${publishArgs.join(' ')} (en ${pkg.dir})...${colors.reset}`);
-    const npmCmd = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-    const result = spawnSync(npmCmd, publishArgs, {
-      cwd: pkgDir,
-      stdio: 'inherit',
-    });
-
-    if (result.status === 0) {
+    try {
+      execSync(publishCmd, { cwd: pkgDir, stdio: 'inherit' });
       published = true;
       log(`\n${colors.green}✔ ¡${pkg.name}@${version} publicado exitosamente en NPM!${colors.reset}`, colors.brightGreen);
       log(`🔗 URL: https://www.npmjs.com/package/${pkg.name}`, colors.cyan);
-    } else {
-      log(`\n${colors.red}✖ Error al publicar ${pkg.name} (código ${result.status}).${colors.reset}`, colors.red);
-      log(`Si el error fue debido a 2FA (código OTP ausente o expirado), ingrésalo a continuación:`, colors.yellow);
-      const inputOtp = await askQuestion(`Ingresa el código 2FA / TOTP (o presiona Enter para abortar): `);
+    } catch {
+      log(`\n${colors.yellow}⚠ Se requiere un código 2FA / TOTP válido para publicar ${pkg.name} en NPM (o el código anterior expiró).${colors.reset}`, colors.yellow);
+      const inputOtp = await askQuestion(`Por favor ingresa tu código 2FA de 6 dígitos (o presiona Enter para abortar): `);
       if (inputOtp && inputOtp.trim().length > 0) {
         currentOtp = inputOtp.trim();
         // Guardar para los siguientes paquetes en caso de batch
@@ -362,14 +353,6 @@ async function main() {
     options.isBatch = true;
   }
 
-  // Si no es dryRun y no se proveyó OTP, consultar si se desea ingresar OTP previo
-  if (!options.dryRun && !options.otp && !options.yes) {
-    const inputOtp = await askQuestion(`\nSi tu cuenta de NPM tiene 2FA (TOTP), ingresa el código de 6 dígitos (o presiona Enter para continuar): `);
-    if (inputOtp && inputOtp.trim().length > 0) {
-      options.otp = inputOtp.trim();
-    }
-  }
-
   // 4. Quality Gates Globales (si no es dry-run y no se omite)
   log(`\n${colors.bold}--- Quality Gates & Verificación de Monorepo ---${colors.reset}`);
 
@@ -395,6 +378,14 @@ async function main() {
     if (!['si', 's', 'y', 'yes'].includes(proceed.toLowerCase())) {
       log(`Operación cancelada por el usuario.`, colors.yellow);
       process.exit(0);
+    }
+  }
+
+  // Solicitar OTP fresco justo antes de iniciar la publicación (para no gastar los 30s en pruebas/compilación)
+  if (!options.dryRun && !options.otp) {
+    const inputOtp = await askQuestion(`\n🔑 Si tu cuenta de NPM tiene 2FA (TOTP), ingresa el código de 6 dígitos ahora (o presiona Enter si no usas 2FA): `);
+    if (inputOtp && inputOtp.trim().length > 0) {
+      options.otp = inputOtp.trim();
     }
   }
 

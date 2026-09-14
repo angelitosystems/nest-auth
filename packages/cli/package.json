@@ -1,7 +1,10 @@
 {
-  "name": "nest-auth-kit",
+  "name": "@angelitosystems/nest-auth-kit",
   "version": "1.0.0",
   "description": "Official CLI toolkit for the @angelitosystems/nest-auth ecosystem by Angelito Systems",
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "nest-auth-kit": "bin/nest-auth-kit.js"
   },

@@ -80,7 +80,7 @@ $PACKAGES = @(
     },
     @{
         id = "cli"
-        name = "nest-auth-kit"
+        name = "@angelitosystems/nest-auth-kit"
         dir = "packages/cli"
         description = "Official CLI Toolkit & Scaffolding Engine"
         dependsOn = @()
