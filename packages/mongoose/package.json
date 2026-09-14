@@ -39,6 +39,6 @@
   "dependencies": {},
   "devDependencies": {
     "@angelitosystems/nest-auth": "*",
-    "mongoose": "^8.9.3"
+    "mongoose": "^9.10.0"
   }
 }
