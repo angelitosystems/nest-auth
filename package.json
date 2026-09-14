@@ -29,7 +29,7 @@
     "deploy:typeorm": "node scripts/deploy.mjs --package=typeorm",
     "deploy:sequelize": "node scripts/deploy.mjs --package=sequelize",
     "deploy:mongoose": "node scripts/deploy.mjs --package=mongoose",
-    "deploy:dry-run": "node scripts/deploy.mjs --dry-run"
+    "deploy:dry-run": "node scripts/deploy.mjs --dry-run --all"
   },
   "keywords": [
     "nestjs",
