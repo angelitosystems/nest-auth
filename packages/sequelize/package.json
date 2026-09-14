@@ -1,0 +1,44 @@
+{
+  "name": "@angelitosystems/nest-auth-sequelize",
+  "version": "1.0.0",
+  "description": "Sequelize database adapter for @angelitosystems/nest-auth (MySQL & PostgreSQL) by Angelito Systems",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "nestjs",
+    "auth",
+    "sequelize",
+    "mysql",
+    "postgresql",
+    "adapter",
+    "angelito-systems"
+  ],
+  "author": "Angelito Systems <contact@angelitosystems.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AngelitoSystems/nest-auth.git",
+    "directory": "packages/sequelize"
+  },
+  "bugs": {
+    "url": "https://github.com/AngelitoSystems/nest-auth/issues"
+  },
+  "homepage": "https://angelitosystems.github.io/nest-auth",
+  "peerDependencies": {
+    "@angelitosystems/nest-auth": "^1.0.0",
+    "sequelize": ">=6.0.0",
+    "sequelize-typescript": ">=2.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@angelitosystems/nest-auth": "*",
+    "@types/validator": "^13.12.2",
+    "sequelize": "^6.37.5",
+    "sequelize-typescript": "^2.1.6"
+  }
+}

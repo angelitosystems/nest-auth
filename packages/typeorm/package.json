@@ -1,0 +1,41 @@
+{
+  "name": "@angelitosystems/nest-auth-typeorm",
+  "version": "1.0.0",
+  "description": "TypeORM database adapter for @angelitosystems/nest-auth (PostgreSQL & MySQL) by Angelito Systems",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "nestjs",
+    "auth",
+    "typeorm",
+    "postgresql",
+    "mysql",
+    "adapter",
+    "angelito-systems"
+  ],
+  "author": "Angelito Systems <contact@angelitosystems.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AngelitoSystems/nest-auth.git",
+    "directory": "packages/typeorm"
+  },
+  "bugs": {
+    "url": "https://github.com/AngelitoSystems/nest-auth/issues"
+  },
+  "homepage": "https://angelitosystems.github.io/nest-auth",
+  "peerDependencies": {
+    "@angelitosystems/nest-auth": "^1.0.0",
+    "typeorm": ">=0.3.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@angelitosystems/nest-auth": "*",
+    "typeorm": "^0.3.20"
+  }
+}

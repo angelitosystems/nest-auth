@@ -1,0 +1,49 @@
+{
+  "name": "nest-auth-kit",
+  "version": "1.0.0",
+  "description": "Official CLI toolkit for the @angelitosystems/nest-auth ecosystem by Angelito Systems",
+  "bin": {
+    "nest-auth-kit": "bin/nest-auth-kit.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "bin",
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "jest --passWithNoTests",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "keywords": [
+    "nestjs",
+    "auth",
+    "cli",
+    "generator",
+    "scaffold",
+    "jwt",
+    "rbac",
+    "angelito-systems"
+  ],
+  "author": "Angelito Systems <contact@angelitosystems.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AngelitoSystems/nest-auth.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/AngelitoSystems/nest-auth/issues"
+  },
+  "homepage": "https://angelitosystems.github.io/nest-auth",
+  "dependencies": {
+    "commander": "^12.1.0",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/prompts": "^2.4.9"
+  }
+}

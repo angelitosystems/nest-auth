@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # PostgreSQL (for Prisma & TypeORM testing)
+  postgres:
+    image: postgres:16-alpine
+    container_name: nest_auth_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: nest_auth_dev
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # MySQL (for TypeORM & Sequelize testing)
+  mysql:
+    image: mysql:8.0
+    container_name: nest_auth_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: nest_auth_dev
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # MongoDB (for Mongoose testing)
+  mongodb:
+    image: mongo:7.0
+    container_name: nest_auth_mongodb
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  postgres_data:
+  mysql_data:
+  mongo_data:

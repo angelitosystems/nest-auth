@@ -1,0 +1,40 @@
+{
+  "name": "@angelitosystems/nest-auth-mongoose",
+  "version": "1.0.0",
+  "description": "Mongoose database adapter for @angelitosystems/nest-auth (MongoDB) by Angelito Systems",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "nestjs",
+    "auth",
+    "mongoose",
+    "mongodb",
+    "adapter",
+    "angelito-systems"
+  ],
+  "author": "Angelito Systems <contact@angelitosystems.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AngelitoSystems/nest-auth.git",
+    "directory": "packages/mongoose"
+  },
+  "bugs": {
+    "url": "https://github.com/AngelitoSystems/nest-auth/issues"
+  },
+  "homepage": "https://angelitosystems.github.io/nest-auth",
+  "peerDependencies": {
+    "@angelitosystems/nest-auth": "^1.0.0",
+    "mongoose": ">=7.0.0 || >=8.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@angelitosystems/nest-auth": "*",
+    "mongoose": "^8.9.3"
+  }
+}

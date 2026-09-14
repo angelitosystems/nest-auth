@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build and Transpilation outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Test Coverage
+coverage/
+*.lcov
+
+# Environment Variables & Secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Operating System & IDE Files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary & Cache Files
+.cache/
+.temp/
+tmp/
+.turbo/
+
+# Docker Volumes & Runtime Data
+docker-data/
+*.pid

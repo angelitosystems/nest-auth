@@ -1,0 +1,70 @@
+{
+  "name": "@angelitosystems/nest-auth-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Enterprise modular authentication, authorization, RBAC, sessions, 2FA, audit, and persistence ecosystem for NestJS by Angelito Systems",
+  "workspaces": [
+    "packages/*",
+    "examples/*",
+    "docs-web"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "dev": "npm run dev --workspace=docs-web",
+    "test": "npm run test --workspaces --if-present",
+    "test:coverage": "jest --coverage --passWithNoTests",
+    "lint": "echo \"Linting workspaces...\"",
+    "format": "prettier --write \"packages/**/*.ts\" \"docs-web/src/**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"packages/**/*.ts\"",
+    "typecheck": "tsc -b tsconfig.base.json packages/*/tsconfig.json",
+    "clean": "rimraf packages/*/dist packages/*/tsconfig.tsbuildinfo docs-web/dist",
+    "doctor": "node packages/cli/bin/nest-auth-kit.js doctor",
+    "docs:build": "npm run build --workspace=docs-web",
+    "docs:dev": "npm run dev --workspace=docs-web",
+    "deploy": "node scripts/deploy.mjs",
+    "deploy:all": "node scripts/deploy.mjs --all",
+    "deploy:core": "node scripts/deploy.mjs --package=core",
+    "deploy:cli": "node scripts/deploy.mjs --package=cli",
+    "deploy:prisma": "node scripts/deploy.mjs --package=prisma",
+    "deploy:typeorm": "node scripts/deploy.mjs --package=typeorm",
+    "deploy:sequelize": "node scripts/deploy.mjs --package=sequelize",
+    "deploy:mongoose": "node scripts/deploy.mjs --package=mongoose",
+    "deploy:dry-run": "node scripts/deploy.mjs --dry-run"
+  },
+  "keywords": [
+    "nestjs",
+    "auth",
+    "authentication",
+    "authorization",
+    "rbac",
+    "jwt",
+    "sessions",
+    "2fa",
+    "totp",
+    "audit",
+    "prisma",
+    "typeorm",
+    "sequelize",
+    "mongoose",
+    "angelito-systems"
+  ],
+  "author": "Angelito Systems <contact@angelitosystems.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AngelitoSystems/nest-auth.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AngelitoSystems/nest-auth/issues"
+  },
+  "homepage": "https://angelitosystems.github.io/nest-auth",
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.10.5",
+    "jest": "^29.7.0",
+    "prettier": "^3.4.2",
+    "rimraf": "^6.0.1",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.7.3"
+  }
+}

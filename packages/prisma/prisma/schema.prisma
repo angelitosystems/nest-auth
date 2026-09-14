@@ -1,0 +1,176 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                         String              @id @default(uuid())
+  email                      String              @unique
+  password_hash              String
+  first_name                 String?
+  last_name                  String?
+  is_active                  Boolean             @default(true)
+  is_email_verified          Boolean             @default(false)
+  two_factor_enabled         Boolean             @default(false)
+  two_factor_secret          String?
+  two_factor_recovery_codes  String[]            @default([])
+  metadata                   Json?
+  created_at                 DateTime            @default(now())
+  updated_at                 DateTime            @updatedAt
+  deleted_at                 DateTime?
+
+  roles                      UserRole[]
+  sessions                   Session[]
+  refresh_tokens             RefreshToken[]
+  password_resets            PasswordReset[]
+  email_verifications        EmailVerification[]
+  audit_logs                 AuditLog[]
+
+  @@index([email])
+  @@index([is_active])
+  @@map("users")
+}
+
+model Role {
+  id          String           @id @default(uuid())
+  name        String           @unique
+  description String?
+  is_default  Boolean          @default(false)
+  created_at  DateTime         @default(now())
+  updated_at  DateTime         @updatedAt
+
+  users       UserRole[]
+  permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String           @id @default(uuid())
+  name        String           @unique
+  description String?
+  created_at  DateTime         @default(now())
+  updated_at  DateTime         @updatedAt
+
+  roles       RolePermission[]
+
+  @@map("permissions")
+}
+
+model UserRole {
+  user_id    String
+  role_id    String
+  created_at DateTime @default(now())
+
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  role       Role     @relation(fields: [role_id], references: [id], onDelete: Cascade)
+
+  @@id([user_id, role_id])
+  @@map("user_roles")
+}
+
+model RolePermission {
+  role_id       String
+  permission_id String
+  created_at    DateTime   @default(now())
+
+  role          Role       @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  permission    Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
+
+  @@id([role_id, permission_id])
+  @@map("role_permissions")
+}
+
+model Session {
+  id            String   @id @default(uuid())
+  user_id       String
+  token_hash    String   @unique
+  ip_address    String?
+  user_agent    String?
+  device        String?
+  is_revoked    Boolean  @default(false)
+  last_activity DateTime @default(now())
+  expires_at    DateTime
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([token_hash])
+  @@map("sessions")
+}
+
+model RefreshToken {
+  id                     String   @id @default(uuid())
+  user_id                String
+  session_id             String?
+  token_hash             String   @unique
+  is_revoked             Boolean  @default(false)
+  replaced_by_token_hash String?
+  expires_at             DateTime
+  created_at             DateTime @default(now())
+
+  user                   User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([token_hash])
+  @@map("refresh_tokens")
+}
+
+model PasswordReset {
+  id         String   @id @default(uuid())
+  user_id    String
+  token_hash String   @unique
+  is_used    Boolean  @default(false)
+  expires_at DateTime
+  created_at DateTime @default(now())
+
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([token_hash])
+  @@map("password_resets")
+}
+
+model EmailVerification {
+  id         String   @id @default(uuid())
+  user_id    String
+  token_hash String   @unique
+  is_used    Boolean  @default(false)
+  expires_at DateTime
+  created_at DateTime @default(now())
+
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([token_hash])
+  @@map("email_verifications")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  user_id     String?
+  action      String
+  entity      String
+  entity_id   String?
+  method      String?
+  route       String?
+  ip          String?
+  user_agent  String?
+  old_values  Json?
+  new_values  Json?
+  metadata    Json?
+  created_at  DateTime @default(now())
+
+  user        User?    @relation(fields: [user_id], references: [id], onDelete: SetNull)
+
+  @@index([user_id])
+  @@index([action])
+  @@index([entity])
+  @@map("audit_logs")
+}
