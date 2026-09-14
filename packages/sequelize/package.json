@@ -4,6 +4,10 @@
   "description": "Sequelize database adapter for @angelitosystems/nest-auth (MySQL & PostgreSQL) by Angelito Systems",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "jest --passWithNoTests"
+  },
   "files": [
     "dist",
     "README.md",

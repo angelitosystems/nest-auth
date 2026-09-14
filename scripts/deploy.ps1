@@ -196,8 +196,8 @@ foreach ($pkg in $targetPackages) {
         Copy-Item "LICENSE" (Join-Path $pkgDir "LICENSE")
     }
 
-    # Verificar dependencia core si se despliega adaptador individualmente
-    if ($pkg.dependsOn.Count -gt 0 -and $targetPackages.Count -eq 1) {
+    # Verificar dependencia core si se despliega adaptador individualmente (y no es dry-run)
+    if ($pkg.dependsOn.Count -gt 0 -and $targetPackages.Count -eq 1 -and -not $DryRun -and -not $Yes) {
         foreach ($dep in $pkg.dependsOn) {
             Write-Host "🔍 Verificando dependencia requerida '$dep' en NPM..." -ForegroundColor DarkGray
             $depCheck = (npm view $dep version 2>$null)

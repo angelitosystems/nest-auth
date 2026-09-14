@@ -175,7 +175,8 @@ async function publishSinglePackage(pkg, options, npmUser) {
   ensureLicense(pkgDir);
 
   // 1. Verificación de dependencias externas en NPM
-  if (pkg.dependsOn.length > 0 && !options.isBatch) {
+  // Solo se realiza cuando se despliega un adaptador individualmente y NO es dry-run
+  if (pkg.dependsOn.length > 0 && !options.isBatch && !options.dryRun && !options.yes) {
     for (const dep of pkg.dependsOn) {
       log(`🔍 Verificando dependencia base requerida '${dep}' en NPM...`, colors.gray);
       const isDepPublished = isPackagePublishedOnNpm(dep);
@@ -269,6 +270,19 @@ async function publishSinglePackage(pkg, options, npmUser) {
 async function main() {
   printBanner();
 
+  // Helper para parsear argumentos con '=' o con espacio
+  function getArgValue(flag) {
+    for (let i = 0; i < args.length; i++) {
+      if (args[i].startsWith(`${flag}=`)) {
+        return args[i].slice(flag.length + 1);
+      }
+      if (args[i] === flag && i + 1 < args.length) {
+        return args[i + 1];
+      }
+    }
+    return '';
+  }
+
   // 1. Parsear argumentos CLI
   const args = process.argv.slice(2);
   const options = {
@@ -276,9 +290,9 @@ async function main() {
     skipTests: args.includes('--skip-tests'),
     yes: args.includes('-y') || args.includes('--yes'),
     all: args.includes('--all'),
-    otp: args.find((a) => a.startsWith('--otp='))?.split('=')[1] || '',
-    tag: args.find((a) => a.startsWith('--tag='))?.split('=')[1] || 'latest',
-    packageArg: args.find((a) => a.startsWith('--package='))?.split('=')[1] || '',
+    otp: getArgValue('--otp') || process.env.NPM_OTP || process.env.OTP || '',
+    tag: getArgValue('--tag') || 'latest',
+    packageArg: getArgValue('--package') || '',
   };
 
   // 2. Verificar sesión de NPM
@@ -299,15 +313,21 @@ async function main() {
 
   if (options.all) {
     targetPackages = [...PACKAGES].sort((a, b) => a.priority - b.priority);
+    options.isBatch = true;
   } else if (options.packageArg) {
     const query = options.packageArg.toLowerCase().trim();
-    const found = PACKAGES.find((p) => p.id === query || p.name === query || p.dir.endsWith(query));
-    if (!found) {
-      log(`✖ Paquete no reconocido: '${options.packageArg}'`, colors.red);
-      log(`Paquetes disponibles: ${PACKAGES.map((p) => p.id).join(', ')}`, colors.yellow);
-      process.exit(1);
+    if (query === 'all') {
+      targetPackages = [...PACKAGES].sort((a, b) => a.priority - b.priority);
+      options.isBatch = true;
+    } else {
+      const found = PACKAGES.find((p) => p.id === query || p.name === query || p.dir.endsWith(query));
+      if (!found) {
+        log(`✖ Paquete no reconocido: '${options.packageArg}'`, colors.red);
+        log(`Paquetes disponibles: ${PACKAGES.map((p) => p.id).join(', ')}, all`, colors.yellow);
+        process.exit(1);
+      }
+      targetPackages = [found];
     }
-    targetPackages = [found];
   } else {
     // Menú Interactivo
     log(`\n${colors.bold}Selecciona qué paquete(s) deseas desplegar en NPM:${colors.reset}\n`);
@@ -335,6 +355,18 @@ async function main() {
         log(`Opción inválida.`, colors.red);
         process.exit(1);
       }
+    }
+  }
+
+  if (targetPackages.length > 1) {
+    options.isBatch = true;
+  }
+
+  // Si no es dryRun y no se proveyó OTP, consultar si se desea ingresar OTP previo
+  if (!options.dryRun && !options.otp && !options.yes) {
+    const inputOtp = await askQuestion(`\nSi tu cuenta de NPM tiene 2FA (TOTP), ingresa el código de 6 dígitos (o presiona Enter para continuar): `);
+    if (inputOtp && inputOtp.trim().length > 0) {
+      options.otp = inputOtp.trim();
     }
   }
 

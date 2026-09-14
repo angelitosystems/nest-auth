@@ -4,6 +4,10 @@
   "description": "Prisma ORM database adapter for @angelitosystems/nest-auth by Angelito Systems",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "jest --passWithNoTests"
+  },
   "files": [
     "dist",
     "prisma",
